@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="자석의 운동으로 전자기 유도, LED 정류 작용, 에너지 전환을 탐구하는 고등학교 통합과학 가상 실험">
+  <meta name="theme-color" content="#10283d">
+  <title>전자기 유도와 LED 가상 실험</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310283d'/%3E%3Cpath d='M9 39c5-19 10 19 15 0s10 19 15 0 10 19 16 0' fill='none' stroke='%23e9a23b' stroke-width='5'/%3E%3Ccircle cx='32' cy='20' r='8' fill='%236de4ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div>
+      <p class="eyebrow">통합과학 · 상호작용형 가상 실험</p>
+      <h1>전자기 유도와 LED 가상 실험</h1>
+      <p class="subtitle">자석을 움직여 LED에 어떤 변화가 나타나는지 관찰해 보세요.</p>
+    </div>
+    <div class="header-badge" aria-label="핵심 원리">유도 기전력 ∝ − ΔΦ / Δt</div>
+  </header>
+
+  <main>
+    <section class="lab-card" aria-labelledby="lab-title">
+      <div class="section-heading">
+        <div><span class="step">01</span><h2 id="lab-title">실험 장치</h2></div>
+        <p id="liveSummary" class="live-summary" aria-live="polite">자석을 움직여 실험을 시작하세요.</p>
+      </div>
+
+      <div class="lab-layout">
+        <div class="apparatus-panel">
+          <div class="apparatus" id="apparatus" aria-label="LED A, 코일, LED B와 드래그 가능한 막대자석 실험 장치">
+            <svg class="circuit-svg" viewBox="0 0 900 310" role="img" aria-labelledby="diagramTitle diagramDesc">
+              <title id="diagramTitle">전자기 유도 실험 회로</title>
+              <desc id="diagramDesc">서로 반대 방향인 두 LED와 구리선 코일, 아래쪽 막대자석</desc>
+              <defs>
+                <linearGradient id="copper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f7c062"/><stop offset=".48" stop-color="#a84c17"/><stop offset="1" stop-color="#f1a33f"/></linearGradient>
+                <filter id="glowA"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                <filter id="glowB"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <path class="wire" d="M132 103H290M610 103H768M132 103V210H768V103"/>
+              <g class="led-fixture led-a" aria-label="LED A">
+                <path d="M95 103H132M62 103H80" class="lead"/><path d="M80 85h22a22 22 0 0 1 0 36H80z" class="led-bulb"/><path d="M80 82v42" class="led-rim"/>
+                <circle class="led-halo" cx="93" cy="103" r="34"/>
+                <text x="92" y="53" text-anchor="middle" class="svg-label">LED A</text>
+              </g>
+              <g class="coil" aria-label="구리선 코일">
+                <path d="M290 103c0-66 28-66 28 0s28 66 28 0 28-66 28 0 28 66 28 0 28-66 28 0 28 66 28 0 28-66 28 0 28 66 28 0 28-66 28 0 28 66 28 0 28-66 28 0 28 66 28 0 28-66 28 0 28 66 28 0 28-66 28 0" fill="none" stroke="url(#copper)" stroke-width="12" stroke-linecap="round"/>
+                <text x="450" y="31" text-anchor="middle" class="svg-label">구리선 코일</text>
+                <line x1="450" y1="46" x2="450" y2="70" class="guide-line"/>
+              </g>
+              <g class="led-fixture led-b" transform="translate(900 0) scale(-1 1)" aria-label="LED B">
+                <path d="M95 103H132M62 103H80" class="lead"/><path d="M80 85h22a22 22 0 0 1 0 36H80z" class="led-bulb"/><path d="M80 82v42" class="led-rim"/>
+                <circle class="led-halo" cx="93" cy="103" r="34"/>
+              </g>
+              <text x="808" y="53" text-anchor="middle" class="svg-label">LED B</text>
+              <g id="currentArrows" class="current-arrows is-hidden" aria-hidden="true">
+                <path id="currentPath" d="M150 198H750"/>
+                <g class="moving-dots"><circle r="5"/><circle r="5"/><circle r="5"/><circle r="5"/><circle r="5"/></g>
+              </g>
+              <g id="diodeSymbols" class="diode-symbols is-hidden">
+                <g transform="translate(44 146)"><path d="M0 15h24l-12-10v20zM25 4v22M25 15h24"/><text x="24" y="49" text-anchor="middle">순방향</text></g>
+                <g transform="translate(807 146)"><path d="M49 15H25l12-10v20zM24 4v22M24 15H0"/><text x="24" y="49" text-anchor="middle">역방향</text></g>
+              </g>
+            </svg>
+
+            <div id="magnet" class="magnet" role="slider" tabindex="0" aria-label="막대자석 위치. 좌우 화살표 키로도 움직일 수 있습니다." aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+              <span class="pole north">N</span><span class="pole south">S</span>
+              <span class="magnet-label">막대자석 · 드래그</span>
+            </div>
+            <div class="motion-guide" aria-hidden="true"><span>↔</span><small>좌우로 움직이기</small></div>
+          </div>
+
+          <div class="controls" aria-label="자석 조작 도구">
+            <div class="button-row">
+              <button type="button" class="control-btn" id="moveLeft">← 왼쪽으로 이동</button>
+              <button type="button" class="control-btn stop" id="stopMove">정지</button>
+              <button type="button" class="control-btn" id="moveRight">오른쪽으로 이동 →</button>
+            </div>
+            <fieldset class="speed-control">
+              <legend>속력 선택</legend>
+              <label><input type="radio" name="speed" value="slow"> 느리게</label>
+              <label><input type="radio" name="speed" value="normal" checked> 보통</label>
+              <label><input type="radio" name="speed" value="fast"> 빠르게</label>
+            </fieldset>
+            <div class="view-toggles">
+              <label class="check"><input id="showDiode" type="checkbox"><span>다이오드 원리 보기</span></label>
+              <label class="check"><input id="showCurrent" type="checkbox"><span>유도 전류 방향 보기</span></label>
+            </div>
+          </div>
+
+          <div id="diodeExplanation" class="diode-explanation is-hidden" aria-live="polite">
+            <div class="diode-state"><strong>LED A</strong><span id="diodeAState">전류가 거의 흐르지 않습니다.</span></div>
+            <div class="diode-state"><strong>LED B</strong><span id="diodeBState">전류가 거의 흐르지 않습니다.</span></div>
+            <p>LED는 빛을 내는 장치이면서 전류를 주로 한 방향으로 흐르게 하는 다이오드입니다.</p>
+          </div>
+        </div>
+
+        <aside class="meter-panel" aria-labelledby="meter-title">
+          <div class="meter-top"><h3 id="meter-title">실시간 측정값</h3><span id="inductionLamp" class="status-lamp"></span></div>
+          <dl class="readouts">
+            <div><dt>자석의 운동 방향</dt><dd id="directionValue">정지</dd></div>
+            <div><dt>자석의 속력</dt><dd id="speedValue">정지</dd></div>
+            <div><dt>자기선속 변화</dt><dd id="fluxValue">거의 변화 없음</dd></div>
+            <div class="emf-readout"><dt>유도 기전력</dt><dd id="emfValue">+0.00</dd></div>
+            <div><dt>유도 전류 방향</dt><dd id="currentValue">없음</dd></div>
+            <div><dt>현재 켜진 LED</dt><dd id="ledValue">없음</dd></div>
+          </dl>
+          <div class="law-note"><span>관찰 핵심</span><p>자석과 코일의 거리가 아니라, 코일을 통과하는 <strong>자기선속이 얼마나 빠르게 변하는지</strong> 살펴보세요.</p></div>
+        </aside>
+      </div>
+
+      <div class="action-bar">
+        <button type="button" id="resetBtn" class="secondary-btn">↺ 실험 초기화</button>
+        <button type="button" id="slowMotionBtn" class="secondary-btn" aria-pressed="false">◷ 천천히 보기</button>
+        <button type="button" id="toggleHelpBtn" class="secondary-btn" aria-pressed="false">설명 숨기기</button>
+        <button type="button" id="graphBtn" class="primary-btn" aria-expanded="false">그래프 보기</button>
+      </div>
+    </section>
+
+    <section id="graphSection" class="content-card graph-section is-hidden" aria-labelledby="graph-title">
+      <div class="section-heading compact"><div><span class="step">02</span><h2 id="graph-title">유도 기전력 실시간 그래프</h2></div><div class="legend"><i></i> 유도 기전력</div></div>
+      <div class="chart-wrap"><span class="y-label">유도 기전력</span><canvas id="emfChart" aria-label="시간에 따른 유도 기전력 그래프"></canvas><span class="x-label">시간</span></div>
+      <p class="help-text">0선 위와 아래는 유도 기전력의 서로 반대인 방향을 뜻합니다. 자석이 정지하면 그래프는 0에 가까워집니다.</p>
+    </section>
+
+    <section class="content-card energy-section" aria-labelledby="energy-title">
+      <div class="section-heading compact"><div><span class="step">03</span><h2 id="energy-title">에너지 전환 보기</h2></div><span id="energyStatus" class="energy-status">자석을 움직여 보세요</span></div>
+      <div id="energyFlow" class="energy-flow">
+        <div class="energy-node mechanical"><span class="energy-icon">✋</span><strong>자석을 움직이는<br>역학적 에너지</strong></div>
+        <div class="energy-arrow" aria-hidden="true"><span>→</span><i></i></div>
+        <div class="energy-node electric"><span class="energy-icon">⚡</span><strong>전기 에너지</strong></div>
+        <div class="energy-arrow" aria-hidden="true"><span>→</span><i></i></div>
+        <div class="energy-node light"><span class="energy-icon">💡</span><strong>LED의 빛 에너지<br>+ 열에너지</strong></div>
+      </div>
+      <p class="energy-explanation help-text">자석을 움직이는 과정에서 역학적 에너지가 전기 에너지로 전환되고, LED에서는 전기 에너지가 빛 에너지와 열에너지로 전환됩니다.</p>
+    </section>
+
+    <section class="content-card inquiry-section" aria-labelledby="inquiry-title">
+      <div class="section-heading compact"><div><span class="step">04</span><h2 id="inquiry-title">탐구하기</h2></div><span id="questionCount" class="question-count">1 / 5</span></div>
+      <div class="question-card">
+        <p id="questionLabel" class="question-label">문제 1.</p>
+        <h3 id="questionText">자석을 코일 근처에서 움직이지 않고 가만히 두면 LED는 어떻게 될까요?</h3>
+        <div id="answerBox" class="answer-box is-hidden"><span>해설</span><p id="answerText"></p></div>
+      </div>
+      <div class="inquiry-actions">
+        <button type="button" id="prevQuestion" class="secondary-btn" disabled>이전 문제</button>
+        <button type="button" id="showAnswer" class="primary-btn">정답 확인</button>
+        <button type="button" id="nextQuestion" class="secondary-btn">다음 문제</button>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>고등학교 통합과학 · 전자기 유도 탐구</p><p>이 모형은 개념 이해를 위해 물리량을 단순화하여 표현합니다.</p></footer>
+  <script src="script.js"></script>
+</body>
+</html>
