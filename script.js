@@ -8,6 +8,8 @@
     previousX: 0,
     velocity: 0,
     commandedDirection: 0,
+    autoOscillate: false,
+    autoDirection: -1,
     speedMode: 'normal',
     dragging: false,
     dragSamples: [],
@@ -113,14 +115,20 @@
     state.lastTime = now;
     const timeScale = state.slowMotion ? .32 : 1;
 
-    if (!state.dragging && state.commandedDirection !== 0) {
-      const commandedVelocity = state.commandedDirection * SPEEDS[state.speedMode] * timeScale;
+    if (!state.dragging && (state.commandedDirection !== 0 || state.autoOscillate)) {
+      const movementDirection = state.autoOscillate ? state.autoDirection : state.commandedDirection;
+      const commandedVelocity = movementDirection * SPEEDS[state.speedMode] * timeScale;
       state.x += commandedVelocity * dt;
       state.velocity = commandedVelocity;
       if (Math.abs(state.x) >= MAX_X) {
         state.x = clamp(state.x, -MAX_X, MAX_X);
-        state.commandedDirection = 0;
-        state.velocity = 0;
+        if (state.autoOscillate) {
+          state.autoDirection *= -1;
+          state.velocity = state.autoDirection * SPEEDS[state.speedMode] * timeScale;
+        } else {
+          state.commandedDirection = 0;
+          state.velocity = 0;
+        }
         updateControlButtons();
       }
     } else if (!state.dragging) {
@@ -155,6 +163,7 @@
   }
 
   elements.magnet.addEventListener('pointerdown', (event) => {
+    stopAutoOscillation();
     state.dragging = true;
     state.commandedDirection = 0;
     state.dragSamples = [{ x: state.x, t: performance.now() }];
@@ -178,6 +187,7 @@
   elements.magnet.addEventListener('keydown', (event) => {
     if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
     event.preventDefault();
+    stopAutoOscillation();
     const oldX = state.x;
     state.x = clamp(state.x + (event.key === 'ArrowRight' ? .04 : -.04), -MAX_X, MAX_X);
     state.velocity = (state.x - oldX) / .04;
@@ -188,9 +198,31 @@
     $('#moveRight').classList.toggle('active', state.commandedDirection > 0);
     $('#stopMove').classList.toggle('active', state.commandedDirection === 0);
   }
-  $('#moveLeft').addEventListener('click', () => { state.commandedDirection = -1; updateControlButtons(); });
-  $('#moveRight').addEventListener('click', () => { state.commandedDirection = 1; updateControlButtons(); });
-  $('#stopMove').addEventListener('click', () => { state.commandedDirection = 0; state.velocity = 0; updateControlButtons(); });
+  function updateAutoButton() {
+    const button = $('#autoOscillate');
+    button.setAttribute('aria-pressed', String(state.autoOscillate));
+    button.textContent = state.autoOscillate ? '■ 자동 왕복 정지' : '↔ 자동 왕복 시작';
+  }
+  function stopAutoOscillation() {
+    state.autoOscillate = false;
+    updateAutoButton();
+  }
+  $('#moveLeft').addEventListener('click', () => { stopAutoOscillation(); state.commandedDirection = -1; updateControlButtons(); });
+  $('#moveRight').addEventListener('click', () => { stopAutoOscillation(); state.commandedDirection = 1; updateControlButtons(); });
+  $('#stopMove').addEventListener('click', () => { stopAutoOscillation(); state.commandedDirection = 0; state.velocity = 0; updateControlButtons(); });
+  $('#autoOscillate').addEventListener('click', () => {
+    if (state.autoOscillate) {
+      stopAutoOscillation();
+      state.commandedDirection = 0;
+      state.velocity = 0;
+    } else {
+      state.commandedDirection = 0;
+      state.autoOscillate = true;
+      state.autoDirection = state.x >= 0 ? -1 : 1;
+      updateAutoButton();
+    }
+    updateControlButtons();
+  });
   document.querySelectorAll('input[name="speed"]').forEach((input) => input.addEventListener('change', () => { state.speedMode = input.value; }));
   $('#showDiode').addEventListener('change', (event) => {
     elements.diodeSymbols.classList.toggle('is-hidden', !event.target.checked);
@@ -199,11 +231,12 @@
   $('#showCurrent').addEventListener('change', updateReadouts);
 
   function resetExperiment() {
-    Object.assign(state, { x: 0, previousX: 0, velocity: 0, commandedDirection: 0, speedMode: 'normal', dragging: false, emf: 0, flux: magneticFlux(0), fluxRate: 0, graph: [], graphAccumulator: 0, slowMotion: false });
+    Object.assign(state, { x: 0, previousX: 0, velocity: 0, commandedDirection: 0, autoOscillate: false, autoDirection: -1, speedMode: 'normal', dragging: false, emf: 0, flux: magneticFlux(0), fluxRate: 0, graph: [], graphAccumulator: 0, slowMotion: false });
     document.querySelector('input[name="speed"][value="normal"]').checked = true;
     $('#slowMotionBtn').setAttribute('aria-pressed', 'false');
     $('#slowMotionBtn').textContent = '◷ 천천히 보기';
     updateControlButtons();
+    updateAutoButton();
     drawGraph();
   }
   $('#resetBtn').addEventListener('click', resetExperiment);
@@ -268,5 +301,5 @@
   $('#nextQuestion').addEventListener('click', () => { state.currentQuestion++; renderQuestion(); });
 
   state.flux = magneticFlux(state.x);
-  updateControlButtons(); renderQuestion(); setMagnetVisual(); updateReadouts(); requestAnimationFrame(updatePhysics);
+  updateControlButtons(); updateAutoButton(); renderQuestion(); setMagnetVisual(); updateReadouts(); requestAnimationFrame(updatePhysics);
 })();

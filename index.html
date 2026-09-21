@@ -37,14 +37,14 @@
                 <filter id="glowA"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 <filter id="glowB"><feGaussianBlur stdDeviation="9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               </defs>
-              <path class="wire" d="M132 103H345M555 103H768M132 103V210H768V103"/>
+              <path class="wire" d="M132 103H375M525 103H768M132 103V210H768V103"/>
               <g class="led-fixture led-a" aria-label="LED A">
                 <path d="M95 103H132M62 103H80" class="lead"/><path d="M80 85h22a22 22 0 0 1 0 36H80z" class="led-bulb"/><path d="M80 82v42" class="led-rim"/>
                 <circle class="led-halo" cx="93" cy="103" r="34"/>
                 <text x="92" y="53" text-anchor="middle" class="svg-label">LED A</text>
               </g>
               <g class="coil" aria-label="구리선 코일">
-                <path d="M345 103c0-66 15-66 15 0s15 66 15 0 15-66 15 0 15 66 15 0 15-66 15 0 15 66 15 0 15-66 15 0 15 66 15 0 15-66 15 0 15 66 15 0 15-66 15 0 15 66 15 0 15-66 15 0 15 66 15 0" fill="none" stroke="url(#copper)" stroke-width="12" stroke-linecap="round"/>
+                <path d="M375 103c0-66 12.5-66 12.5 0s12.5 66 12.5 0 12.5-66 12.5 0 12.5 66 12.5 0 12.5-66 12.5 0 12.5 66 12.5 0 12.5-66 12.5 0 12.5 66 12.5 0 12.5-66 12.5 0 12.5 66 12.5 0 12.5-66 12.5 0 12.5 66 12.5 0" fill="none" stroke="url(#copper)" stroke-width="12" stroke-linecap="round"/>
                 <text x="450" y="31" text-anchor="middle" class="svg-label">구리선 코일</text>
                 <line x1="450" y1="46" x2="450" y2="70" class="guide-line"/>
               </g>
@@ -76,6 +76,7 @@
               <button type="button" class="control-btn stop" id="stopMove">정지</button>
               <button type="button" class="control-btn" id="moveRight">오른쪽으로 이동 →</button>
             </div>
+            <button type="button" class="auto-btn" id="autoOscillate" aria-pressed="false">↔ 자동 왕복 시작</button>
             <fieldset class="speed-control">
               <legend>속력 선택</legend>
               <label><input type="radio" name="speed" value="slow"> 느리게</label>
